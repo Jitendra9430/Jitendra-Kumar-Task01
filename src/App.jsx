@@ -7,20 +7,26 @@
 
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
+import StudentAssignments from "./pages/StudentAssignments";
+import AssignmentDetails from "./pages/AssignmentsDetails";
+import StudentProgress from "./pages/StudentProgress";
+
 import AdminDashboard from "./pages/AdminDashboard";
 import CreateAssignment from "./pages/CreateAssignment";
 
 import { getCurrentUser } from "./utils/storage";
 
-function ProtectedRoute({ children, role }) {
 
+// ==========================================
+// PROTECTED ROUTE
+// ==========================================
+
+function ProtectedRoute({ children, role }) {
   const user = getCurrentUser();
 
-  console.log(
-    "PROTECTED ROUTE USER:",
-    user
-  );
+  console.log("PROTECTED ROUTE USER:", user);
 
+  // User is not logged in
   if (!user) {
     return (
       <Navigate
@@ -30,10 +36,8 @@ function ProtectedRoute({ children, role }) {
     );
   }
 
-  if (
-    role &&
-    user.role !== role
-  ) {
+  // User has wrong role
+  if (role && user.role !== role) {
     return (
       <Navigate
         to="/login"
@@ -45,20 +49,30 @@ function ProtectedRoute({ children, role }) {
   return children;
 }
 
+
+// ==========================================
+// APP
+// ==========================================
+
 function App() {
   return (
     <BrowserRouter>
 
       <Routes>
 
-        {/* LOGIN */}
+        {/* ==================================
+            LOGIN
+        ================================== */}
 
         <Route
           path="/login"
           element={<Login />}
         />
 
-        {/* STUDENT */}
+
+        {/* ==================================
+            STUDENT DASHBOARD
+        ================================== */}
 
         <Route
           path="/student"
@@ -69,7 +83,52 @@ function App() {
           }
         />
 
-        {/* ADMIN */}
+
+        {/* ==================================
+            STUDENT ASSIGNMENTS
+        ================================== */}
+
+        <Route
+          path="/student/assignments"
+          element={
+            <ProtectedRoute role="student">
+              <StudentAssignments />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* ==================================
+            ASSIGNMENT DETAILS
+        ================================== */}
+
+        <Route
+          path="/student/assignments/:id"
+          element={
+            <ProtectedRoute role="student">
+              <AssignmentDetails />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* ==================================
+            STUDENT PROGRESS
+        ================================== */}
+
+        <Route
+          path="/student/progress"
+          element={
+            <ProtectedRoute role="student">
+              <StudentProgress />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* ==================================
+            ADMIN DASHBOARD
+        ================================== */}
 
         <Route
           path="/admin"
@@ -80,7 +139,10 @@ function App() {
           }
         />
 
-        {/* CREATE ASSIGNMENT */}
+
+        {/* ==================================
+            CREATE ASSIGNMENT
+        ================================== */}
 
         <Route
           path="/admin/create"
@@ -91,7 +153,10 @@ function App() {
           }
         />
 
-        {/* DEFAULT */}
+
+        {/* ==================================
+            DEFAULT ROUTE
+        ================================== */}
 
         <Route
           path="/"
@@ -103,7 +168,10 @@ function App() {
           }
         />
 
-        {/* UNKNOWN ROUTE */}
+
+        {/* ==================================
+            UNKNOWN ROUTE
+        ================================== */}
 
         <Route
           path="*"

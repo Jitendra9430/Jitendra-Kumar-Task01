@@ -309,7 +309,7 @@ function Login() {
             </div>
 
             <div className="brand-name">
-              Joineazy
+              TaskFlow
             </div>
 
           </div>
