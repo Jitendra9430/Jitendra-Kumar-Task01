@@ -1,57 +1,84 @@
-import {
-    initalAssignment,
-    initialSubmissions,
-} from "../data/mockData.js";
+ import {
+  initialAssignments,
+  initialSubmissions,
+} from "../data/mockData";
 
 export const initializeStorage = () => {
-    if (!localStorage.getItem("assignments")) {
-        localStorage.setItem(
-            "assignments",
-            JSON.stringify(initalAssignment)
-        );
-    }
 
-    if (!localStorage.getItem("submissions")) {
-        localStorage.setItem(
-            "submissions",
-            JSON.stringify(initialSubmissions)
-        );
-    }
+  if (!localStorage.getItem("assignments")) {
+
+    localStorage.setItem(
+      "assignments",
+      JSON.stringify(initialAssignments)
+    );
+
+  }
+
+  if (!localStorage.getItem("submissions")) {
+
+    localStorage.setItem(
+      "submissions",
+      JSON.stringify(initialSubmissions)
+    );
+
+  }
 };
 
 export const getAssignments = () => {
-    return JSON.parse(localStorage.getItem("assignments")) || [];
+
+  return JSON.parse(
+    localStorage.getItem("assignments") || "[]"
+  );
+
 };
 
 export const saveAssignments = (assignments) => {
-    localStorage.setItem(
-        "assignments",
-        JSON.stringify(assignments)
-    );
+
+  localStorage.setItem(
+    "assignments",
+    JSON.stringify(assignments)
+  );
+
 };
 
 export const getSubmissions = () => {
-    return JSON.parse(localStorage.getItem("submissions")) || [];
+
+  return JSON.parse(
+    localStorage.getItem("submissions") || "[]"
+  );
+
 };
 
 export const saveSubmissions = (submissions) => {
-    localStorage.setItem(
-        "submissions",
-        JSON.stringify(submissions)
-    );
+
+  localStorage.setItem(
+    "submissions",
+    JSON.stringify(submissions)
+  );
+
 };
 
 export const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("currentUser"));
+
+  return JSON.parse(
+    localStorage.getItem("currentUser")
+  );
+
 };
 
 export const saveCurrentUser = (user) => {
-    localStorage.setItem(
-        "currentUser",
-        JSON.stringify(user)
-    );
+
+  localStorage.setItem(
+    "currentUser",
+    JSON.stringify(user)
+  );
+
 };
 
 export const logoutUser = () => {
-    localStorage.removeItem("currentUser");
+
+  localStorage.removeItem(
+    "currentUser"
+  );
+
 };

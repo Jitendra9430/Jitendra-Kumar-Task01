@@ -29,27 +29,37 @@ export const users = [
   },
 ];
 
-export const initalAssignment = [
-    {
-        id: "assignment1",
-        title: "React Fundamentals",
-        description: "Build a responsive react application",
-        deadline: "26-09-2026",
-        createdBy: "admin1",
-    },
-    {
-        id: "assignment2",
-        title: "JavaScript ES6",
-        description: "Solve javaScript problems by using ES6+ concepts",
-        deadline: "27-09-2026",
-        createdBy: "admin1",
-    },
-    {
+export const initialAssignments = [
+  {
+    id: "assignment1",
+    title: "React Fundamentals",
+    description:
+      "Build a responsive React application using components, props and state.",
+    deadline: "2026-09-28",
+    driveLink:
+      "https://drive.google.com/",
+    createdBy: "admin1",
+  },
+
+  {
+    id: "assignment2",
+    title: "JavaScript ES6",
+    description:
+      "Solve JavaScript problems by using modern ES6+ concepts.",
+    deadline: "2026-09-30",
+    driveLink:
+      "https://drive.google.com/",
+    createdBy: "admin1",
+  },
+
+  {
     id: "assignment3",
     title: "CSS Responsive Design",
     description:
       "Create a responsive landing page for desktop, tablet and mobile.",
     deadline: "2026-10-02",
+    driveLink:
+      "https://drive.google.com/",
     createdBy: "admin1",
   },
 ];

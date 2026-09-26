@@ -183,70 +183,127 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] =
-    useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // ================================
+  // LOGIN FUNCTION
+  // ================================
 
   const loginUser = (user) => {
-    initializeStorage();
-    saveCurrentUser(user);
+    console.log("LOGIN USER:", user);
 
-    if (user.role === "student") {
-      navigate("/student");
-    } else {
-      navigate("/admin");
+    try {
+      // Initialize assignment data
+      initializeStorage();
+
+      // Save logged-in user
+      saveCurrentUser(user);
+
+      // Verify localStorage
+      const savedUser =
+        localStorage.getItem("currentUser");
+
+      console.log(
+        "SAVED USER:",
+        savedUser
+      );
+
+      // Navigate according to role
+      if (user.role === "student") {
+        console.log("Navigating to student...");
+        navigate("/student");
+      } else if (user.role === "admin") {
+        console.log("Navigating to admin...");
+        navigate("/admin");
+      }
+
+    } catch (err) {
+      console.error(
+        "LOGIN ERROR:",
+        err
+      );
+
+      setError(
+        "Something went wrong while logging in."
+      );
     }
   };
+
+  // ================================
+  // NORMAL LOGIN
+  // ================================
 
   const handleLogin = (e) => {
     e.preventDefault();
 
     setError("");
 
+    const enteredEmail =
+      email.trim().toLowerCase();
+
     const user = users.find(
       (item) =>
         item.email.toLowerCase() ===
-          email.toLowerCase().trim() &&
+          enteredEmail &&
         item.password === password
     );
 
     if (!user) {
-      setError("Invalid email or password");
+      setError(
+        "Invalid email or password."
+      );
+
       return;
     }
 
-    setLoading(true);
-
-    setTimeout(() => {
-      loginUser(user);
-    }, 500);
+    loginUser(user);
   };
 
+  // ================================
+  // DEMO LOGIN
+  // ================================
+
   const handleDemoLogin = (role) => {
+    console.log(
+      "DEMO BUTTON CLICKED:",
+      role
+    );
+
     setError("");
 
     const user = users.find(
       (item) => item.role === role
     );
 
-    if (!user) return;
+    console.log(
+      "DEMO USER FOUND:",
+      user
+    );
 
-    setLoading(true);
+    if (!user) {
+      setError(
+        `No ${role} demo user found.`
+      );
 
-    setTimeout(() => {
-      loginUser(user);
-    }, 400);
+      return;
+    }
+
+    loginUser(user);
   };
 
   return (
     <div className="login-page">
 
-      {/* ================= LEFT SIDE ================= */}
+      {/* =================================
+          LEFT SIDE
+      ================================= */}
 
       <section className="login-left">
 
         <div className="login-brand">
+
           <div className="brand-logo">
+
             <div className="brand-icon">
               🎓
             </div>
@@ -254,11 +311,13 @@ function Login() {
             <div className="brand-name">
               Joineazy
             </div>
+
           </div>
 
           <div className="brand-tag">
             🎓 Assignment Management
           </div>
+
         </div>
 
         <div className="login-left-content">
@@ -287,6 +346,7 @@ function Login() {
           <div className="features">
 
             <div className="feature">
+
               <div className="feature-icon">
                 📚
               </div>
@@ -301,9 +361,11 @@ function Login() {
                   and manage assignments.
                 </p>
               </div>
+
             </div>
 
             <div className="feature">
+
               <div className="feature-icon">
                 📊
               </div>
@@ -318,9 +380,11 @@ function Login() {
                   for every assignment.
                 </p>
               </div>
+
             </div>
 
             <div className="feature">
+
               <div className="feature-icon">
                 👥
               </div>
@@ -335,6 +399,7 @@ function Login() {
                   dashboards.
                 </p>
               </div>
+
             </div>
 
           </div>
@@ -342,6 +407,7 @@ function Login() {
         </div>
 
         <div className="login-quote">
+
           <p>
             "Education is the most powerful
             weapon which you can use to
@@ -351,17 +417,21 @@ function Login() {
           <span>
             — Nelson Mandela
           </span>
+
         </div>
 
       </section>
 
-      {/* ================= RIGHT SIDE ================= */}
+      {/* =================================
+          RIGHT SIDE
+      ================================= */}
 
       <section className="login-right">
 
         <div className="login-card">
 
           <div className="login-card-header">
+
             <h2>
               Welcome back! 👋
             </h2>
@@ -369,7 +439,10 @@ function Login() {
             <p>
               Sign in to your dashboard.
             </p>
+
           </div>
+
+          {/* LOGIN FORM */}
 
           <form onSubmit={handleLogin}>
 
@@ -442,7 +515,9 @@ function Login() {
                     )
                   }
                 >
-                  {showPassword ? "🙈" : "👁"}
+                  {showPassword
+                    ? "🙈"
+                    : "👁"}
                 </button>
 
               </div>
@@ -454,20 +529,20 @@ function Login() {
             {error && (
               <div className="login-error">
                 <span>⚠️</span>
-                <span>{error}</span>
+
+                <span>
+                  {error}
+                </span>
               </div>
             )}
 
-            {/* SIGN IN */}
+            {/* NORMAL LOGIN */}
 
             <button
               type="submit"
               className="sign-in-button"
-              disabled={loading}
             >
-              {loading
-                ? "Signing in..."
-                : "Sign In →"}
+              Sign In →
             </button>
 
           </form>
@@ -475,11 +550,13 @@ function Login() {
           {/* DIVIDER */}
 
           <div className="divider">
+
             <div className="divider-line" />
 
             <span>OR</span>
 
             <div className="divider-line" />
+
           </div>
 
           {/* DEMO LOGIN */}
@@ -490,26 +567,34 @@ function Login() {
 
           <div className="demo-buttons">
 
+            {/* STUDENT */}
+
             <button
+              type="button"
               className="demo-button student-demo"
               onClick={() =>
                 handleDemoLogin("student")
               }
-              disabled={loading}
             >
               👨‍🎓
-              <span>Student</span>
+              <span>
+                Student
+              </span>
             </button>
 
+            {/* ADMIN */}
+
             <button
+              type="button"
               className="demo-button admin-demo"
               onClick={() =>
                 handleDemoLogin("admin")
               }
-              disabled={loading}
             >
               👨‍🏫
-              <span>Admin</span>
+              <span>
+                Admin
+              </span>
             </button>
 
           </div>
@@ -522,7 +607,9 @@ function Login() {
             <span>
               Demo password:
               {" "}
-              <strong>123456</strong>
+              <strong>
+                123456
+              </strong>
             </span>
           </div>
 

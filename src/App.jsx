@@ -1,26 +1,45 @@
-import{
+ import {
   BrowserRouter,
   Navigate,
   Route,
   Routes,
-} from "react-router-dom"
+} from "react-router-dom";
 
-import Login from "./pages/Login.jsx"
-import StudetDashboard from "./pages/StudentDashboard.jsx"
-import CreateAssignment from "./pages/CreateAssignment.jsx"
-import AdminDashboard from "./pages/AdminDashboard.jsx"
+import Login from "./pages/Login";
+import StudentDashboard from "./pages/StudentDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import CreateAssignment from "./pages/CreateAssignment";
 
-import { getCurrentUser } from "./utils/storage.js"
+import { getCurrentUser } from "./utils/storage";
 
-function ProtectedRoute({children, role}) {
+function ProtectedRoute({ children, role }) {
+
   const user = getCurrentUser();
 
-  if(!user) {
-    return <Navigate to="/login" replace />;
+  console.log(
+    "PROTECTED ROUTE USER:",
+    user
+  );
+
+  if (!user) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
   }
 
-  if(role && role.user !== role) {
-    return <Navigate to="/login" replace />;
+  if (
+    role &&
+    user.role !== role
+  ) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
   }
 
   return children;
@@ -29,52 +48,77 @@ function ProtectedRoute({children, role}) {
 function App() {
   return (
     <BrowserRouter>
-    <Routes>
-    <Route
-    path="/login"
-    element={<Login/>}
-    />
 
-    <Route
-    path="/student"
-    element={
-      <ProtectedRoute role="student">
-        <StudetDashboard/>
-        </ProtectedRoute> 
-    }
-    />
+      <Routes>
 
-    <Route
-    path="admin"
-    element={
-      <ProtectedRoute role="admin">
-        <AdminDashboard/>
-      </ProtectedRoute>
-    }
-    />
+        {/* LOGIN */}
 
-    <Route
-    path="/admin/create"
-    element={
-      <ProtectedRoute role="admin">
-        <CreateAssignment/>
-      </ProtectedRoute>
-    }
-    />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-    <Route
-    path="/"
-    element={<Navigate to="/login" replace/>}
-    />
+        {/* STUDENT */}
 
-    <Route
-    path="*"
-    element={<Navigate to="/login" replace/>}
-    />
-    </Routes>
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute role="student">
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ADMIN */}
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* CREATE ASSIGNMENT */}
+
+        <Route
+          path="/admin/create"
+          element={
+            <ProtectedRoute role="admin">
+              <CreateAssignment />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* DEFAULT */}
+
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
+        />
+
+        {/* UNKNOWN ROUTE */}
+
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
+        />
+
+      </Routes>
+
     </BrowserRouter>
   );
 }
-
 
 export default App;

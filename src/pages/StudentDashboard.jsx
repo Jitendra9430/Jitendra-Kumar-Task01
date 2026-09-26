@@ -10,6 +10,25 @@ import {
   saveSubmissions,
 } from "../utils/storage";
 
+const formatDate = (date) => {
+  if (!date) return "No deadline";
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return "No deadline";
+  }
+
+  return parsedDate.toLocaleDateString(
+    "en-IN",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }
+  );
+};
+
 function StudentDashboard() {
   const user = getCurrentUser();
 
@@ -54,14 +73,30 @@ function StudentDashboard() {
       : Math.round((completed / total) * 100);
 
   const handleSubmit = (assignmentId) => {
-    const currentSubmissions = getSubmissions();
+  const currentSubmissions =
+    getSubmissions();
 
-    const updated = currentSubmissions.map(
+  const existingSubmission =
+    currentSubmissions.find(
+      (submission) =>
+        submission.assignmentId ===
+          assignmentId &&
+        submission.studentId ===
+          user.id
+    );
+
+  let updated;
+
+  if (existingSubmission) {
+
+    updated = currentSubmissions.map(
       (submission) => {
+
         if (
           submission.assignmentId ===
             assignmentId &&
-          submission.studentId === user.id
+          submission.studentId ===
+            user.id
         ) {
           return {
             ...submission,
@@ -73,9 +108,22 @@ function StudentDashboard() {
       }
     );
 
-    saveSubmissions(updated);
-    setSubmissions(updated);
-  };
+  } else {
+
+    updated = [
+      ...currentSubmissions,
+      {
+        assignmentId,
+        studentId: user.id,
+        status: "submitted",
+      },
+    ];
+  }
+
+  saveSubmissions(updated);
+
+  setSubmissions(updated);
+};
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -101,7 +149,10 @@ function StudentDashboard() {
               </p>
             </div>
 
-            <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+                 id="progress"
+                 className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <DashboardCard
                 title="Total Assignments"
                 value={total}
@@ -124,7 +175,10 @@ function StudentDashboard() {
               />
             </div>
 
-            <div className="mb-5 flex items-center justify-between">
+            <div
+                 id="assignments"
+                 className="mb-5 flex items-center justify-between scroll-mt-24"
+            >
               <div>
                 <h2 className="text-xl font-bold text-slate-900">
                   My Assignments
